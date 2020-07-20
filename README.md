@@ -8,6 +8,12 @@ It is the file that consist of all paramters that say how our python app going t
 2.Service.yml:
 It is the file that tells how are we going to expose our application the outside world
 
+For Deployment :
+$kubectl apply -f deployment.yml
+
+For Exposing a service over loadbalancer:
+$kubectl apply -f service.yml
+
 Solution Design:
 
 As we have to deploy our application with zero downtime so we are using two variables of the kubernetes system :
