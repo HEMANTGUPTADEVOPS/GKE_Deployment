@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pythonapp-service
+  namespace: python
+spec:
+  ports:
+  - port: 80 
+    nodePort: 31065
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: pythonapp-deployment 
+  type: LoadBalancer 

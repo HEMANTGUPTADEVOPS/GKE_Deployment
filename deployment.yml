@@ -1,0 +1,72 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: pythonapp-deployment
+  namespace: python
+spec:
+  selector:
+    matchLabels:
+       app: pythonapp-deployment  
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: pythonapp-deployment
+    spec:
+      containers:
+      - name: pythonapp-container
+        image: asia.gcr.io/grand-ward-283704/python_app:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 200m
+          limits:
+            memory: 2Gi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 20
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 20
+        volumeMounts:
+        - name: app-logs
+          mountPath: /var/log/nginx/
+      volumes:
+        - name: app-logs
+          hostPath:
+             path: /var/log/nginx
+             type: DirectoryOrCreate
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  minReadySeconds: 25
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: python-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: pythonapp-deployment
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 50
