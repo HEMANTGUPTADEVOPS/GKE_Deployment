@@ -3,10 +3,10 @@ GKE_Deployment on Google Kubernetes Engine:
 
 We have two file deployment.yml and service.yml
 1.Deployment.yml :
-It is the file that consist of all paramters that say how our python app going to deploy on the Google Kubernetes Engine
+It is the file that consist of all parameters that say how our python app is going to be deployed on the Google Kubernetes Engine
 
 2.Service.yml:
-It is the file that tells how are we going to expose our application the outside world
+It is the file that tells how are we going to expose our application over internet.
 
 For Deployment :
 $kubectl apply -f deployment.yml
@@ -16,9 +16,9 @@ $kubectl apply -f service.yml
 
 Solution Design:
 
-As we have to deploy our application with zero downtime so we are using two variables of the kubernetes system :
+As we have to deploy our application with zero downtime so we are using two variables of the kubernetes deployment strategy:
 1.maxSurge: That is how many new pods(our python app code) will be created when we are going to deploy the new image over our cluster
-2.maxUnavailable:That is number of pods from that set that can be unavailable after the eviction or during deployment
+2.maxUnavailable:That is number of pods from the set that can be unavailable after the eviction or during deployment
 
 So we have set the variable maxSurge as 1 so that during the deployment atleast one pod will be created immediately and maxUnavailable as 1 so that during deployment if pods are successfully created then pods will be terminated 1 by 1 at a time not both the pod so our application will be highly avialable.
 This is somewhat of rolling upgrade but if we have some more resources we can go for blue green deployment as well where we can launch 2 another instance and then terminate the old instance one by one by saying the strategy as maxSurge:2 and maxUnavaible:1
