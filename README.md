@@ -35,6 +35,7 @@ For making such domain we have updated in our nginx as server_name as k8s.34.93.
 
 We can as well make use of ingress for exposing our services internal within other application but as this was just a start will do it.
 
+Everyone is welcome to contribute.
 
 
 
